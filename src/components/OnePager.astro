@@ -1,0 +1,245 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { SiteData } from '../data/sites';
+import Icon from './Icon.astro';
+import Gallery from './Gallery.astro';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  site: SiteData;
+  photos: Record<string, ImageMetadata>;
+}
+const { site, photos } = Astro.props;
+const bold = (s: string) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+const year = new Date().getFullYear();
+const mapImage = photos['map-bar.jpg'];
+---
+<header class="site-header">
+  <div class="container">
+    <a class="wordmark" href="#top">
+      {site.name}
+      <small>{site.nameSub}</small>
+    </a>
+    <LangSwitcher current="en" />
+  </div>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <Image
+        src={photos[site.heroFile]}
+        alt=""
+        widths={[640, 960, 1280]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        quality={78}
+      />
+    </div>
+    <div class="container hero-inner">
+      <p class="hero-loc">📍 {site.location}</p>
+      <h1>{site.name}</h1>
+      <p class="hero-tagline">{site.tagline}</p>
+      <div class="hero-ctas">
+        <a class="btn btn-wa" href={site.contact.whatsapp}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L4 20l1-4.4A8.5 8.5 0 1 1 21 11.5z"/></svg>
+          Write to us on WhatsApp
+        </a>
+        <a class="btn btn-ghost" href="#gallery" style="color:#fff">See the apartment</a>
+      </div>
+    </div>
+    <div class="hero-score" aria-label="Rated 10.0 on Booking.com">
+      <strong>10.0</strong>
+      <span>on Booking.com</span>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <div class="stats">
+    {site.stats.map((s) => (
+      <div>
+        <strong>{s.value}</strong>
+        <span>{s.label}</span>
+      </div>
+    ))}
+  </div>
+
+  <!-- The apartment -->
+  <section class="section" id="apartment">
+    <div class="container">
+      <div class="apt-grid">
+        <div>
+          <p class="eyebrow">The apartment</p>
+          <div class="section-head" style="margin-bottom:1.4rem">
+            <h2>{site.welcomeTitle}</h2>
+          </div>
+          <div class="apt-prose">
+            {site.welcome.map((p) => (
+              <p set:html={bold(p)} />
+            ))}
+          </div>
+          <div class="amenities">
+            {site.amenities.map((a) => (
+              <div class="amenity">
+                <Icon name={a.icon} />
+                {a.label}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="apt-photos">
+          <Image src={photos[site.aptPhotos[0]]} alt="" widths={[480, 760]} sizes="(min-width: 56rem) 42vw, 92vw" loading="lazy" />
+          <Image class="apt-photo-2" src={photos[site.aptPhotos[1]]} alt="" widths={[480, 760]} sizes="(min-width: 56rem) 38vw, 85vw" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="section section-alt" id="gallery">
+    <div class="container">
+      <p class="eyebrow">Photos</p>
+      <div class="section-head">
+        <h2>Have a look around</h2>
+      </div>
+      <Gallery items={site.gallery} photos={photos} />
+    </div>
+  </section>
+
+  <!-- Quotes -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Guests</p>
+      <div class="section-head">
+        <h2>What guests say</h2>
+      </div>
+      <div class="quotes-wrap">
+        <div class="score-badge">
+          <strong>10.0</strong>
+          <em>Exceptional</em>
+          <span>{site.reviewCount}</span>
+        </div>
+        <div class="quote-cards">
+          {site.quotes.map((q) => (
+            <figure class="quote-card">
+              <blockquote>{q.quote}</blockquote>
+              <figcaption>— {q.guest}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The area -->
+  <section class="section section-alt" id="area">
+    <div class="container">
+      <p class="eyebrow">The area</p>
+      <div class="section-head">
+        <h2>Bar, at your doorstep</h2>
+      </div>
+      <div class="area-grid">
+        {site.area.map((a) => (
+          <div class="area-card">
+            <span class="dist">{a.dist}</span>
+            <h3>{a.name}</h3>
+            <p>{a.text}</p>
+          </div>
+        ))}
+      </div>
+      <div class="map-card">
+        {mapImage ? (
+          <Image src={mapImage} alt={`Map of Bar, Montenegro, showing the location of ${site.name}`} widths={[640, 960]} sizes="(min-width: 52rem) 55vw, 92vw" loading="lazy" />
+        ) : (
+          <div style="min-height:15rem;background:var(--bg-alt);display:grid;place-items:center;font-size:3rem">🗺️</div>
+        )}
+        <div class="map-card-body">
+          <h3>How to find us</h3>
+          <p>{site.location} — about 40 minutes from Podgorica airport, 5 minutes on foot from the center of Bar.</p>
+          <a class="btn btn-primary" href={site.mapsUrl} target="_blank" rel="noopener">Open directions</a>
+          {mapImage && <p class="map-attr">Map © OpenStreetMap contributors</p>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practical -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Good to know</p>
+      <div class="section-head">
+        <h2>The practical part</h2>
+      </div>
+      <div class="practical-grid">
+        {site.practical.map((p) => (
+          <div class="practical-item">
+            <strong>{p.label}</strong>
+            <span>{p.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact-band section" id="contact">
+    <div class="container">
+      <p class="eyebrow">Contact</p>
+      <h2>Ask us anything — we answer fast</h2>
+      <p class="lede">
+        Write to us for dates and rates, directions, or a local tip. Booking directly with us is
+        always the best price — no middleman.
+      </p>
+      <div class="contact-btns">
+        <a class="btn btn-wa" href={site.contact.whatsapp}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L4 20l1-4.4A8.5 8.5 0 1 1 21 11.5z"/></svg>
+          WhatsApp
+        </a>
+        <a class="btn btn-viber" href={site.contact.viber}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.8 3.5h2.2l1.4 3.8-1.7 1.3a12 12 0 0 0 6.7 6.7l1.3-1.7 3.8 1.4v2.2a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.8 5.7a2 2 0 0 1 2-2.2z"/></svg>
+          Viber
+        </a>
+        <a class="btn btn-plain" href={site.contact.phoneHref}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.8 3.5h2.2l1.4 3.8-1.7 1.3a12 12 0 0 0 6.7 6.7l1.3-1.7 3.8 1.4v2.2a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.8 5.7a2 2 0 0 1 2-2.2z"/></svg>
+          Call us
+        </a>
+        <a class="btn btn-plain" href={`mailto:${site.contact.email}`}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.5h17v13h-17z M3.5 7l8.5 6 8.5-6"/></svg>
+          Email
+        </a>
+      </div>
+      <div class="contact-plain">
+        <span>{site.contact.phone} · <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></span>
+        <span>We speak English & Italian · Parliamo italiano</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sister apartment -->
+  <section class="section">
+    <div class="container">
+      <div class="sister-card">
+        <div>
+          <p class="eyebrow">One more thing</p>
+          <h3>Meet {site.sister.name}</h3>
+          <p>{site.sister.text}</p>
+        </div>
+        <a class="btn btn-primary" href={site.sister.url}>Visit {site.sister.name}</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-links">
+      <a href={site.bookingUrl} target="_blank" rel="noopener">Booking.com</a>
+      <a href={site.instagramUrl} target="_blank" rel="noopener">Instagram</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <p class="footer-note">© {year} {site.name}, Bar · A family-run apartment · Photos © {site.name}</p>
+  </div>
+</footer>

@@ -1,0 +1,43 @@
+/* ============================================================
+   Dolce dimora — playful "sweet home by the sea".
+   Cream · emerald (the kitchen) · soft pink (the bedroom).
+   Nunito (rounded, warm) for display.
+   ============================================================ */
+
+.theme-dolce {
+  --font-display: "Nunito Variable", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --display-weight: 800;
+
+  --bg: #fefaf5;
+  --bg-alt: #f9efe6;
+  --ink: #33302c;
+  --ink-soft: #6c655d;
+  --heading: #1f4d3d;
+  --line: #ecdfd2;
+
+  --accent: #d4738d;        /* bedroom pink, deepened for contrast */
+  --accent-deep: #b8506e;
+  --accent-ink: #fff6f2;
+
+  --band: #1f4d3d;          /* kitchen emerald, deepened */
+  --band-ink: #f2f8ef;
+  --band-accent: #efb3c3;
+
+  --hero-fade: rgb(22 46 38 / .80);
+  --radius: 22px;
+  --radius-btn: 999px;
+  --card-shadow: 0 10px 30px -18px rgb(31 77 61 / .25);
+}
+
+/* Playful flourishes: pills, tinted cards, rounded everything */
+.theme-dolce .amenity { border-radius: 999px; padding-inline: 1.1rem; background: #fff; }
+.theme-dolce .quote-card { background: #fff; border-color: transparent; }
+.theme-dolce .quote-card:nth-child(2n) { background: #fdf1f4; }
+.theme-dolce .area-card { border-color: transparent; background: #fff; }
+.theme-dolce .area-card:nth-child(3n + 2) { background: #eef6ef; }
+.theme-dolce .area-card:nth-child(3n + 3) { background: #fdf1f4; }
+.theme-dolce .score-badge { border-radius: 50%; aspect-ratio: 1; display: grid; place-content: center; padding: 2.2rem; }
+.theme-dolce .practical-item { border-radius: calc(var(--radius) * .6); border-left-width: 5px; background: #fff; }
+.theme-dolce .practical-item:nth-child(2n) { border-left-color: var(--band); }
+.theme-dolce .sister-card { border-style: solid; border-color: #efb3c3; background: #fdf1f4; }
+.theme-dolce .stats span { letter-spacing: .04em; }

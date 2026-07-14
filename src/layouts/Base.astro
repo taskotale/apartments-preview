@@ -1,0 +1,36 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  themeClass: string;
+  favicon: string;
+  ogImage?: string;
+  lang?: string;
+  noindex?: boolean;
+}
+const { title, description, themeClass, favicon, ogImage, lang = 'en', noindex = false } = Astro.props;
+const faviconHref =
+  'data:image/svg+xml,' +
+  encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${favicon}</text></svg>`);
+---
+<!doctype html>
+<html lang={lang} class={themeClass}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={faviconHref} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.url)} />}
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

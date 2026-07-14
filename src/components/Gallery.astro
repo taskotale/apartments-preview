@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { GalleryItem } from '../data/sites';
+
+interface Props {
+  items: GalleryItem[];
+  photos: Record<string, ImageMetadata>;
+}
+const { items, photos } = Astro.props;
+const resolved = items.filter((i) => photos[i.file]);
+---
+<div class="gallery-grid" id="gallery-grid">
+  {resolved.map((item, i) => (
+    <button
+      type="button"
+      data-full={photos[item.file].src}
+      data-caption={item.caption}
+      data-index={i}
+      aria-label={`Open photo: ${item.caption}`}
+    >
+      <Image src={photos[item.file]} alt={item.caption} width={720} widths={[420, 720]} sizes="(min-width: 48rem) 25vw, 50vw" loading="lazy" />
+    </button>
+  ))}
+</div>
+
+<dialog class="lightbox" id="lightbox" aria-label="Photo viewer">
+  <figure>
+    <img id="lb-img" alt="" />
+    <figcaption id="lb-caption"></figcaption>
+    <button type="button" class="lb-btn lb-prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="lb-btn lb-next" aria-label="Next photo">›</button>
+    <button type="button" class="lb-btn lb-close" aria-label="Close">✕</button>
+  </figure>
+</dialog>
+
+<script>
+  const grid = document.getElementById('gallery-grid')!;
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement;
+  const img = document.getElementById('lb-img') as HTMLImageElement;
+  const caption = document.getElementById('lb-caption')!;
+  const buttons = [...grid.querySelectorAll<HTMLButtonElement>('button[data-full]')];
+  let index = 0;
+
+  function show(i: number) {
+    index = (i + buttons.length) % buttons.length;
+    const b = buttons[index];
+    img.src = b.dataset.full!;
+    img.alt = b.dataset.caption ?? '';
+    caption.textContent = b.dataset.caption ?? '';
+  }
+
+  buttons.forEach((b, i) =>
+    b.addEventListener('click', () => {
+      show(i);
+      dialog.showModal();
+    }),
+  );
+  dialog.querySelector('.lb-prev')!.addEventListener('click', () => show(index - 1));
+  dialog.querySelector('.lb-next')!.addEventListener('click', () => show(index + 1));
+  dialog.querySelector('.lb-close')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  dialog.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(index - 1);
+    if (e.key === 'ArrowRight') show(index + 1);
+  });
+</script>
