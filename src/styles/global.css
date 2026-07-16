@@ -281,7 +281,11 @@ h1, h2, h3 {
 .apt-prose strong { color: var(--ink); }
 .apt-photos { display: grid; gap: 1rem; }
 .apt-photos img { border-radius: var(--radius); width: 100%; height: auto; }
-.apt-photos .apt-photo-2 { margin-left: clamp(1rem, 4vw, 3rem); }
+/* Magazine-style stagger only from tablet up; on phones the two photos
+   stack flush and aligned to the same edges. */
+@media (min-width: 56rem) {
+  .apt-photos .apt-photo-2 { margin-left: clamp(1rem, 4vw, 3rem); margin-top: calc(-1 * clamp(0rem, 2vw, 1rem)); }
+}
 
 .amenities {
   margin-top: 2rem;
