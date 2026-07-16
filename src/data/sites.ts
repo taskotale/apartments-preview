@@ -203,7 +203,7 @@ export const dolce: SiteData = {
   mapsUrl: 'https://www.google.com/maps/dir/?api=1&destination=42.0975,19.1014',
   practical: [
     { label: 'Check-in', value: '15:00 – 18:00' },
-    { label: 'Check-out', value: 'by 12:00' },
+    { label: 'Check-out', value: 'by 11:00' },
     { label: 'Parking', value: 'free, next to the building' },
     { label: 'Pets', value: 'not allowed' },
     { label: 'Smoking', value: 'non-smoking' },
