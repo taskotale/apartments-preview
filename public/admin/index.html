@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="me">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Uređivanje sajta · Mare e Monti</title>
+    <style>
+      /* Small "this is a demo" ribbon so nobody mistakes it for the live editor */
+      #demo-ribbon {
+        position: fixed; z-index: 9999; inset: 0 0 auto 0;
+        background: #1b2a41; color: #fff; font: 600 13px/1.4 system-ui, sans-serif;
+        text-align: center; padding: 7px 12px;
+      }
+      #demo-ribbon b { color: #f0a35e; }
+      /* nudge Decap's UI below the ribbon */
+      #nc-root { padding-top: 34px; }
+    </style>
+  </head>
+  <body>
+    <div id="demo-ribbon">
+      DEMO — probna verzija. Izmjene se <b>ne čuvaju</b> nigdje. Ovo je samo prikaz kako izgleda uređivanje.
+    </div>
+
+    <!-- Manual init so we can register the Montenegrin locale before the CMS loads -->
+    <script>
+      window.CMS_MANUAL_INIT = true;
+    </script>
+    <script src="https://unpkg.com/decap-cms@^3.14.0/dist/decap-cms.js"></script>
+    <script type="module">
+      // The Croatian (hr) UI ships with Decap and reads almost identically to
+      // Montenegrin. We clone it into a "me" locale and swap the handful of words
+      // that actually differ, so the chrome (buttons, menus) is Montenegrin too.
+      const MONTENEGRIN_OVERRIDES = {
+        app: {
+          header: { content: 'Sadržaj', workflow: 'Tok objave', media: 'Fotografije', quickAdd: 'Novo' },
+          app: { errorHeader: 'Greška pri učitavanju konfiguracije', loading: 'Učitavanje…', errorBoundary: { title: 'Greška', details: 'Došlo je do greške.' } },
+        },
+        ui: {
+          errorBoundary: { title: 'Greška' },
+          settingsDropdown: { logOut: 'Odjavi se' },
+          toast: { onFailToPersist: 'Greška pri čuvanju.' },
+        },
+        collection: {
+          sidebar: { collections: 'Sekcije', searchAll: 'Pretraži sve', searchIn: 'Pretraži u' },
+          collectionTop: { viewAs: 'Prikaži kao', newButton: 'Novo: %{collectionLabel}' },
+          entries: { loadingEntries: 'Učitavanje…', noEntries: 'Nema unosa' },
+        },
+        editor: {
+          editorToolbar: {
+            publish: 'Objavi', published: 'Objavljeno', unpublish: 'Povuci',
+            duplicate: 'Dupliraj', publishAndCreateNew: 'Objavi i napravi novo',
+            publishAndDuplicate: 'Objavi i dupliraj', deleteEntry: 'Obriši',
+            save: 'Sačuvaj', saving: 'Čuvanje…', discardChanges: 'Odbaci izmjene',
+            backCollection: 'Uređivanje u sekciji %{collectionLabel}',
+            unsavedChanges: 'Nesačuvane izmjene', changesSaved: 'Izmjene sačuvane',
+          },
+          editorWidgets: {
+            image: { choose: 'Izaberi fotografiju', chooseDifferent: 'Izaberi drugu', remove: 'Ukloni' },
+            list: { add: 'Dodaj %{item}', addType: 'Dodaj %{item}' },
+          },
+        },
+        mediaLibrary: {
+          mediaLibraryModal: {
+            upload: 'Otpremi', chooseSelected: 'Izaberi', download: 'Preuzmi',
+            deleting: 'Brisanje…', noResults: 'Nema rezultata.', images: 'Fotografije',
+          },
+          mediaLibraryCard: { draft: 'Skica' },
+        },
+      };
+
+      function deepMerge(base, over) {
+        for (const k of Object.keys(over)) {
+          base[k] = over[k] && typeof over[k] === 'object' && !Array.isArray(over[k])
+            ? deepMerge(base[k] && typeof base[k] === 'object' ? base[k] : {}, over[k])
+            : over[k];
+        }
+        return base;
+      }
+
+      let locale = 'hr';
+      try {
+        const mod = await import('https://esm.sh/decap-cms-locales@3');
+        const hr = mod.hr || (mod.default && mod.default.hr);
+        if (hr) {
+          const me = deepMerge(JSON.parse(JSON.stringify(hr)), MONTENEGRIN_OVERRIDES);
+          window.CMS.registerLocale('me', me);
+          locale = 'me';
+        }
+      } catch (e) {
+        console.warn('Montenegrin locale unavailable, falling back to Croatian:', e);
+      }
+
+      window.CMS.init({ config: { locale } });
+    </script>
+  </body>
+</html>
