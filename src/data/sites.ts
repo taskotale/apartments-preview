@@ -121,14 +121,14 @@ export const mare: SiteData = {
     phoneHref: 'tel:+38260000000',
     whatsapp: 'https://wa.me/38260000000?text=Hello!%20I%27m%20interested%20in%20Mare%20e%20Monti.',
     viber: 'viber://chat?number=%2B38260000000',
-    email: 'hello@maremonti.me',
+    email: 'kontakt@mareemonti.me',
   },
   bookingUrl: 'https://www.booking.com/hotel/me/mare-e-monti-bar.html',
   instagramUrl: 'https://www.instagram.com/mare_e_monti_antivari/',
   sister: {
     name: 'Dolce dimora',
     text: 'Dates already taken? Our sister apartment is a one-minute walk away, in the same residence — same family, its own sweet character.',
-    url: '../dolce/',
+    url: 'https://dolcedimora.me/',
   },
 };
 
@@ -214,26 +214,14 @@ export const dolce: SiteData = {
     phoneHref: 'tel:+38260000000',
     whatsapp: 'https://wa.me/38260000000?text=Hello!%20I%27m%20interested%20in%20Dolce%20dimora.',
     viber: 'viber://chat?number=%2B38260000000',
-    email: 'hello@dolcedimora.me',
+    email: 'kontakt@dolcedimora.me',
   },
   bookingUrl: 'https://www.booking.com/hotel/me/dolce-dimora.html',
   instagramUrl: 'https://www.instagram.com/rentstannadanbar/',
   sister: {
     name: 'Mare e Monti',
     text: 'Dates already taken? Our sister apartment is a one-minute walk away, in the same residence — same family, its own retro soul.',
-    url: '../mare/',
+    url: 'https://mareemonti.me/',
   },
 };
 
-export const languages = [
-  { code: 'en', flag: 'gb', name: 'English' },
-  { code: 'me', flag: 'me', name: 'Crnogorski' },
-  { code: 'it', flag: 'it', name: 'Italiano' },
-  { code: 'de', flag: 'de', name: 'Deutsch' },
-  { code: 'fr', flag: 'fr', name: 'Français' },
-  { code: 'ru', flag: 'ru', name: 'Русский' },
-  { code: 'uk', flag: 'ua', name: 'Українська' },
-  { code: 'tr', flag: 'tr', name: 'Türkçe' },
-  { code: 'sv', flag: 'se', name: 'Svenska' },
-  { code: 'zh', flag: 'cn', name: '中文' },
-];

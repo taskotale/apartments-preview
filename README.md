@@ -1,43 +1,43 @@
-# Astro Starter Kit: Minimal
+# Two apartment sites — Bar, Montenegro
 
-```sh
-npm create astro@latest -- --template minimal
+One codebase, two static sites:
+
+| Site | Domain | Build |
+|---|---|---|
+| Mare e Monti | https://mareemonti.me | `APT_SITE=mare npx astro build` |
+| Dolce dimora | https://dolcedimora.me | `APT_SITE=dolce npx astro build` |
+
+No CMS, no database, no server — just static HTML/CSS/images on a CDN.
+
+## Editing the sites
+
+Almost everything a normal update touches lives in **one file**: [`src/data/sites.ts`](src/data/sites.ts).
+It has a `mare` and a `dolce` object with the text, amenities, gallery captions,
+area info, house rules and contact details. Change a value, commit, done —
+the site rebuilds and is live in about a minute.
+
+Photos live in `src/assets/photos/mare/` and `src/assets/photos/dolce/`.
+To swap one: drop the new `.jpg` in the folder and reference its filename in
+the `gallery` / `heroFile` / `aptPhotos` fields of `sites.ts`.
+
+You can edit `sites.ts` straight from github.com (open the file → pencil icon →
+edit → "Commit changes"). No tools to install.
+
+## Running it locally
+
+```bash
+npm install
+APT_SITE=mare npm run dev     # or APT_SITE=dolce
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Deployment
 
-## 🚀 Project Structure
+Each site is a **Cloudflare Pages** project connected to this repo:
 
-Inside of your Astro project, you'll see the following folders and files:
+- Build command: `npx astro build`
+- Output directory: `dist`
+- Environment variable: `APT_SITE` = `mare` or `dolce`
+- Node: pinned to 22 via `.nvmrc`
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Pushing to `main` redeploys both. Domains are registered at Cloudflare, so DNS
+is attached automatically.

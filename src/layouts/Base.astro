@@ -11,6 +11,7 @@ interface Props {
   noindex?: boolean;
 }
 const { title, description, themeClass, favicon, ogImage, lang = 'en', noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const faviconHref =
   'data:image/svg+xml,' +
   encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${favicon}</text></svg>`);
@@ -23,11 +24,16 @@ const faviconHref =
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href={faviconHref} />
+    <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.url)} />}
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site ?? Astro.url)} />}
+    <meta property="og:locale" content="en" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>

@@ -1,6 +1,7 @@
-# Temporary CP1 preview deploy (GitHub Pages).
-# The real sites will live on Cloudflare Pages with custom domains;
-# this workflow exists only so the mockups have shareable URLs today.
+# Temporary preview on GitHub Pages, so there's a shareable link until the
+# Cloudflare Pages projects are connected to the real domains.
+# Builds each site exactly the way production does (APT_SITE), just under a
+# subpath. Delete this workflow once mareemonti.me / dolcedimora.me are live.
 name: deploy-preview
 on:
   push:
@@ -22,12 +23,36 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: npx astro build
+
+      - name: Build Mare e Monti
+        run: npx astro build
         env:
-          BASE_PATH: /apartments-preview
+          APT_SITE: mare
+          BASE_PATH: /apartments-preview/mare
+      - run: mkdir -p preview && mv dist preview/mare
+
+      - name: Build Dolce dimora
+        run: npx astro build
+        env:
+          APT_SITE: dolce
+          BASE_PATH: /apartments-preview/dolce
+      - run: mv dist preview/dolce
+
+      - name: Landing page linking both
+        run: |
+          cat > preview/index.html <<'HTML'
+          <!doctype html><meta charset="utf-8">
+          <title>Preview — two apartments in Bar</title>
+          <meta name="robots" content="noindex">
+          <style>body{font-family:system-ui;background:#14181f;color:#f2efe8;display:grid;place-content:center;min-height:100vh;gap:1rem;text-align:center}a{color:#f0a35e;font-size:1.2rem}</style>
+          <h1>Preview</h1>
+          <a href="mare/">Mare e Monti →</a>
+          <a href="dolce/">Dolce dimora →</a>
+          HTML
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: preview
   deploy:
     needs: build
     runs-on: ubuntu-latest
